@@ -26,11 +26,10 @@ export const processImage = async (base64Image: string) => {
     }
 };
 export const checkExistingReading = async (customer_code: string, measure_type: string, measure_datetime: string) => {
-    
 };
 
 
-export const confirmLeitura = async (measure_uuid: string, confirmed_value: number) => {
+export const confirmReading = async (measure_uuid: string, confirmed_value: number) => {
     const reading = await Reading.findOneAndUpdate(
         { measure_uuid },
         { measure_value: confirmed_value, has_confirmed: true },
@@ -43,12 +42,12 @@ export const confirmLeitura = async (measure_uuid: string, confirmed_value: numb
 
     return reading;
 };
-export const findLeituraByUUID = async (measure_uuid: string) => {
+export const findReadingByUUID = async (measure_uuid: string) => {
         return await Reading.findOne({ measure_uuid });
 };
 
 
-export const listLeituras = async (customerCode: string, measureType?: string) => {
+export const listReading = async (customerCode: string, measureType?: string) => {
     const filter: any = { customer_code: customerCode };
     if(measureType) {
         filter.measure_type = measureType;

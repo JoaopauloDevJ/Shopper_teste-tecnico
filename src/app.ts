@@ -1,13 +1,13 @@
 import express from 'express';
 import mongoose from 'mongoose';
-import leituraRoutes from './routes/readingRoutes';
+import readingRoutes from './routes/readingRoutes';
 import dotenv from 'dotenv';
 
 dotenv.config();
 
 const app = express();
 app.use(express.json());
-app.use('/leitura', leituraRoutes);
+app.use('/leitura', readingRoutes);
 
 interface MyConnectOptions extends mongoose.ConnectOptions {
     useNewRtlParser: boolean

@@ -1,10 +1,10 @@
 import { Router } from 'express';
-import { postLeitura, patchLeitura, getLeituras } from '../Controllers/readingControl';
+import { postReading, patchReading, getReading } from '../Controllers/readingControl';
 
 const router = Router();
 
-router.post('/', postLeitura);
-router.patch('/:id', patchLeitura);
-router.get('/:customerCode/list', getLeituras);
+router.post('/', postReading);
+router.patch('/:id', patchReading);
+router.get('/:customerCode/list', getReading);
 
 export default router;

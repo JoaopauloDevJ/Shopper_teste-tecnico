@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
-import { processImage, confirmLeitura, listLeituras, checkExistingReading, findLeituraByUUID } from '../Services/GeminiServices';
 
-//        POST
+import { processImage, confirmReading, listReading, checkExistingReading, findReadingByUUID } from '../Services/GeminiServices';
 
-export const postLeitura = async (req: Request, res: Response) => {
+
+export const postReading = async (req: Request, res: Response) => {
     const { image, customer_code, measure_datetime, measure_type } = req.body;
 
     if (!image || !customer_code || !measure_datetime || !measure_type) {
@@ -23,7 +23,6 @@ export const postLeitura = async (req: Request, res: Response) => {
 
     try {
         const result = await processImage(image);
-
         return res.status(200).json({
             image_url: result.image_url,
             measure_value: result.measure_value,
@@ -38,9 +37,7 @@ export const postLeitura = async (req: Request, res: Response) => {
 };
 
 
-//        PATCH
-
-export const patchLeitura = async (req: Request, res: Response) => {
+export const patchReading = async (req: Request, res: Response) => {
     const { measure_uuid, confirmed_value } = req.body;
 
     if (!measure_uuid || typeof confirmed_value !== 'number') {
@@ -50,15 +47,15 @@ export const patchLeitura = async (req: Request, res: Response) => {
         });
     }
 
-    const leitura = await findLeituraByUUID(measure_uuid);
-    if (!leitura) {
+    const reading = await findReadingByUUID(measure_uuid);
+    if (!reading) {
         return res.status(404).json({
         error_code: "MEASURE_NOT_FOUND",
         error_description: "Leitura não encontrada"
         });
     }
 
-    if (leitura.has_confirmed) {
+    if (reading.has_confirmed) {
         return res.status(409).json({
         error_code: "CONFIRMATION_DUPLICATE",
         error_description: "Leitura já confirmada"
@@ -66,7 +63,7 @@ export const patchLeitura = async (req: Request, res: Response) => {
     }
 
     try {
-        await confirmLeitura(measure_uuid, confirmed_value);
+        await confirmReading(measure_uuid, confirmed_value);
 
         return res.status(200).json({
         success: true
@@ -80,8 +77,7 @@ export const patchLeitura = async (req: Request, res: Response) => {
 };
 
 
-//           GET
-export const getLeituras = async (req: Request, res: Response) => {
+export const getReading = async (req: Request, res: Response) => {
     const { customerCode } = req.params;
     const { measure_type } = req.query;
 
@@ -93,18 +89,16 @@ export const getLeituras = async (req: Request, res: Response) => {
     }
 
     try {
-        const leituras = await listLeituras(customerCode, measure_type?.toLocaleString());
-    
-        if (leituras.length === 0) {
+        const readings = await listReading(customerCode, measure_type?.toLocaleString());
+        if (readings.length === 0) {
             return res.status(404).json({
             error_code: "MEASURES_NOT_FOUND",
             error_description: "Nenhum registro encontrado"
             });
         }
-
         return res.status(200).json({
             customer_code: customerCode,
-            measures: leituras
+            measures: readings
         });
     } catch (error) {
         return res.status(500).json({
