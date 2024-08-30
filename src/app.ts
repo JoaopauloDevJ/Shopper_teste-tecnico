@@ -10,7 +10,7 @@ app.use(express.json());
 app.use('/leitura', readingRoutes);
 
 
-mongoose.connect(process.env.MONGO_URL || 'mongodb://localhost:27017/leitura-imagens')
+mongoose.connect(process.env.MONGO_URL as string)
     .then(() => {
         console.log('Conectado ao MongoDB');
     }).catch((error) => {

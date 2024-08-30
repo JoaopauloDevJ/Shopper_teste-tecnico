@@ -6,14 +6,16 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY as string);
 
 
 export const processImage = async (base64Image: string) => {
-    const measureValue = Math.floor(Math.random() * 1000);
+    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+    const response = model.generateContent([ base64Image ]);
+    const measureValue = (await response).response.text;
 
     const reading = new Reading({
         measure_uuid: uuidv4(),
         measure_datetime: new Date(),
         measure_type: 'WATER',
         has_confirmed: false,
-        image_url: "https://tm.ibxk.com.br/2023/09/15/15154205365257.jpg?ims=750x",
+        image_url: base64Image,
         measure_value: measureValue
     });
 

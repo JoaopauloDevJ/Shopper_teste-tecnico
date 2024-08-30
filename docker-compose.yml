@@ -3,17 +3,17 @@ services:
     build: .
     ports:
       - "3000:3000"
-    environment:
-      - mongodb://localhost:27017/leitura-imagens
+    env_file:
+      - .env
     depends_on:
       - mongodb
 
   mongodb:
-    image: mongodb:5.5
+    image: mongo:4.4
     ports: 
       - "27017:27017"
     volumes:
-      - mongodb-data:/data/db
+      - mongo-data:/data/db
 
 volumes:
-  mongodb-data:
+  mongo-data:
