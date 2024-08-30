@@ -4,9 +4,9 @@ import { processImage, confirmReading, listReading, checkExistingReading, findRe
 
 
 export const postReading = async (req: Request, res: Response) => {
-    const { image, customer_code, measure_datetime, measure_type } = req.body;
+    const { imageUrl, customer_code, measure_datetime, measure_type } = req.body;
 
-    if (!image || !customer_code || !measure_datetime || !measure_type) {
+    if (!imageUrl || !customer_code || !measure_datetime || !measure_type) {
         return res.status(400).json({
             error_code: "INVALID_DATA",
             error_description: "Os dados fornecidos no corpo da requisição são inválidos"
@@ -22,7 +22,7 @@ export const postReading = async (req: Request, res: Response) => {
     }
 
     try {
-        const result = await processImage(image);
+        const result = await processImage(imageUrl);
         return res.status(200).json({
             image_url: result.image_url,
             measure_value: result.measure_value,

@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { v4 as uuidv4 } from 'uuid';
 import Reading from '../Models/reading';
@@ -5,10 +6,13 @@ import Reading from '../Models/reading';
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY as string);
 
 
-export const processImage = async (base64Image: string) => {
+export const processImage = async (imageUrl: string) => {
+    const response = await axios.get(imageUrl, { responseType: 'arraybuffer' });
+    const base64Image = Buffer.from(response.data, 'binary').toString('base64');
+
     const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
-    const response = model.generateContent([ base64Image ]);
-    const measureValue = (await response).response.text;
+    const responseAI = model.generateContent([ base64Image ]);
+    const measureValue = (await responseAI).response.text;
 
     const reading = new Reading({
         measure_uuid: uuidv4(),
