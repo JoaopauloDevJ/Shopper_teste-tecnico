@@ -26,6 +26,13 @@ export const processImage = async (base64Image: string) => {
     }
 };
 export const checkExistingReading = async (customer_code: string, measure_type: string, measure_datetime: string) => {
+    const reading = await Reading.findOne({
+        customer_code,
+        measure_type,
+        measure_datetime: new Date(measure_datetime)
+    });
+
+    return reading !== null;
 };
 
 

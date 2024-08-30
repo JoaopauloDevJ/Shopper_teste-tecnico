@@ -1,6 +1,7 @@
 import { Schema, model, Document } from 'mongoose';
 
 interface IReading extends Document {
+    customer_code: string,
     measure_uuid: string;
     measure_datetime: Date;
     measure_type: string;
@@ -10,6 +11,7 @@ interface IReading extends Document {
 }
 
 const readingSchema = new Schema<IReading>({
+    customer_code: { type: String, required: true },
     measure_uuid: { type: String, required: true, unique: true },
     measure_datetime: { type: Date, required: true },
     measure_type: { type: String, required: true },
